@@ -29,6 +29,17 @@ export class AuthService{
         return this.http.post(url, body);
     }
 
+    signUp(email : string, password : string){
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`
+        const body = {
+            email,
+            password,
+            returnSecureToken : true
+        }
+
+        return this.http.post<User>(url, body);
+    }
+
     formatUserData(response: AuthResponse){
         const expirationTimestamp = Date.now() + (+response.expiresIn * 1000)
         const formattedUser: User = {
@@ -39,6 +50,34 @@ export class AuthService{
         }
 
         return formattedUser;
+    }
+
+    setErrorMessage(errorResponse : HttpErrorResponse){
+        let message = 'A unknown error has occurred !'
+        if(!errorResponse.error || !errorResponse.error.error){
+            return message;
+        }
+
+        switch(errorResponse.error.error.message){
+            case 'INVALID_LOGIN_CREDENTIALS':
+                message = 'Invalid username or password'
+                break;
+            case 'USER_DISABLED':
+                message = 'This user has been disabled'
+                break;
+            case 'EMAIL_NOT_FOUND':
+                message = 'Email is invalid'
+                break;
+            case 'INVALID_PASSWORD':
+                message = 'Password is invalid'
+                break;
+            case 'EMAIL_EXISTS':
+                message = 'A user with this email already exists'
+                break;
+            default:
+                message = errorResponse.error.error.message
+        }
+        return message;
     }
 
 }

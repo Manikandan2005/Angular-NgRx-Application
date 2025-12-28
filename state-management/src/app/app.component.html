@@ -1,3 +1,9 @@
+<div>
+  <app-loader *ngIf="(loading$ | async)"></app-loader>
+  <app-toaster [errorMessage]="(errorMessage$ | async)" *ngIf="(errorMessage$ | async)"></app-toaster>
+</div>
+
+
 <div class="app-container">
    <app-header></app-header>
   <div>

@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit{
     // this.authService.login(email, password).subscribe((response) => {
     //   this.loggedInUser = response;
     // })
-    console.log('action called !')
     this.store.dispatch(loginStart({email, password}));
   }
 

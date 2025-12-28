@@ -10,6 +10,8 @@ import { appReducer } from './store/router/app.state';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/states/auth.effects';
+import { LoaderComponent } from './shared/loader/loader.component';
+import { ToasterComponent } from './shared/toaster/toaster.component';
 
 
 @NgModule({
@@ -17,6 +19,8 @@ import { AuthEffects } from './auth/states/auth.effects';
     AppComponent,
     HomeComponent,
     HeaderComponent,
+    LoaderComponent,
+    ToasterComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +29,6 @@ import { AuthEffects } from './auth/states/auth.effects';
     ReactiveFormsModule,
     StoreModule.forRoot(appReducer),
     EffectsModule.forRoot([AuthEffects]),
-    StoreModule.forRoot({}, {}),
   ],
   providers: [],
   bootstrap: [AppComponent]

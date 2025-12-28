@@ -1,1 +1,28 @@
-<p>sign-up works!</p>
+<div class="app-signup">
+    <div class="signup-container">
+        <form class="signup-form" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+            <h2>Signup Here</h2>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" placeholder="Enter your email" formControlName="email">
+                <div class="validation-error" *ngIf= "signUpForm.get('email').touched && signUpForm.get('email').invalid">
+                    <small *ngIf="signUpForm.get('email')?.errors?.['required']">Email is required</small>
+                    <small *ngIf="signUpForm.get('email')?.errors?.['email']">Invalid email</small>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" placeholder="Enter your password" formControlName="password">
+                <div class="validation-error" *ngIf="signUpForm.get('password').touched && signUpForm.get('password').invalid">
+                    <small *ngIf="signUpForm.get('password')?.errors?.['required']">Password is required</small>
+                </div>
+            </div>
+            <button type="submit" class="signup-button" >
+                Signup
+            </button>
+            <div class="login-link">
+                Already have an account?<a routerLink="/auth/login">Login Here</a>
+            </div>
+        </form>
+    </div>
+</div>
