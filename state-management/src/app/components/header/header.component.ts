@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { logout } from 'src/app/auth/states/auth.actions';
 import { getLoggedUser } from 'src/app/auth/states/auth.selector';
 import { User } from 'src/app/models/user.model';
 import { AppState } from 'src/app/store/router/app.state';
@@ -23,6 +24,6 @@ export class HeaderComponent {
   }
 
   onLogoutClicked(){
-    
+     this.store.dispatch(logout());
   }
 }

@@ -12,6 +12,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/states/auth.effects';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { ToasterComponent } from './shared/toaster/toaster.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 
 @NgModule({
@@ -28,6 +29,10 @@ import { ToasterComponent } from './shared/toaster/toaster.component';
     HttpClientModule,
     ReactiveFormsModule,
     StoreModule.forRoot(appReducer),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, 
+      logOnly: false,
+    }),
     EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [],

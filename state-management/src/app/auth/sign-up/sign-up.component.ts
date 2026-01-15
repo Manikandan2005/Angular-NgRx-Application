@@ -25,7 +25,6 @@ export class SignUpComponent implements OnInit{
   }
 
   onSignUp(){
-    console.log('called')
     const {email, password} = this.signUpForm.value;
     this.store.dispatch(signUpStart({email : email, password : password}))
   }

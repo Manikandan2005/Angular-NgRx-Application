@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { API_KEY } from "src/app/constants";
@@ -14,22 +15,23 @@ import { AppState } from "src/app/store/router/app.state";
 export class AuthService{
     constructor(
         private http: HttpClient,
+        private router: Router,
         private store: Store<AppState>
     ){}
 
     timer: any;
 
-    login(email: string, password: string): Observable<any>{
+    login(email: string, password: string): Observable<AuthResponse>{
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
         const body = {
             email,
             password,
             returnSecureToken: true 
         }
-        return this.http.post(url, body);
+        return this.http.post<AuthResponse>(url, body);
     }
 
-    signUp(email : string, password : string){
+    signUp(email : string, password : string): Observable<AuthResponse>{
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`
         const body = {
             email,
@@ -37,7 +39,7 @@ export class AuthService{
             returnSecureToken : true
         }
 
-        return this.http.post<User>(url, body);
+        return this.http.post<AuthResponse>(url, body);
     }
 
     formatUserData(response: AuthResponse){
@@ -78,6 +80,45 @@ export class AuthService{
                 message = errorResponse.error.error.message
         }
         return message;
+    }
+
+    saveUserInLocalStorage(user : User){
+        try{
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    readUserFromLocalStorage(){
+        try{
+            const loggedUser = localStorage.getItem('currentUser');
+            if(!loggedUser){
+                return null;
+            }
+            const user : User = JSON.parse(loggedUser);
+            if(user.expiresAt <= Date.now()){
+                localStorage.removeItem('currentUser');
+                return null;
+            }
+
+            return user;
+        }
+        catch(error){
+            localStorage.removeItem('currentUser');
+            return null;
+        }
+    }
+
+    logoutUser(){
+        const loggedUser = localStorage.getItem('currentUser');
+        if(!loggedUser){
+            return null;
+        }
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/auth/login'])
+        return null;
     }
 
 }
