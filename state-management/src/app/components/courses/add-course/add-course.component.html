@@ -13,7 +13,9 @@
                         formControlName="title"
                     >
                 </div>
-                <div class="validation-error"></div>
+                <div class="validation-error" *ngIf="courseForm.get('title').touched && courseForm.get('title').invalid">
+                    Title is required
+                </div>
 
                 <div class="form-field">
                     <label for="description">Description</label>
@@ -23,7 +25,9 @@
                     >
                     </textarea>
                 </div>
-                <div class="validation-error"></div>
+                <div class="validation-error"  *ngIf="courseForm.get('description').touched && courseForm.get('description').invalid">
+                    Description is required
+                </div>
 
                 <div class="form-field">
                     <label for="author">Author</label>
@@ -32,7 +36,9 @@
                         formControlName="author"
                     >
                 </div>
-                <div class="validation-error"></div>
+                <div class="validation-error"  *ngIf="courseForm.get('author').touched && courseForm.get('author').invalid">
+                    Author is required
+                </div>
 
                 <div class="form-field">
                     <label for="price">Price</label>
@@ -45,8 +51,8 @@
                 <div class="form-field file-upload-field">
                     <label for="image">Course Image</label>
                     <div class="file-input-wrapper">
-                        <input type="file" accept="image/*">
-                        <button type="button" class="browse-button">Browse File</button>
+                        <input type="file" accept="image/*" (change)="fileUploadEvent($event)" #courseImageUpload>
+                        <button type="button" class="browse-button" (click)="courseImageUpload.click()">Browse File</button>
                         <span class="file-name">No file chosen</span>
                     </div>
                 </div>

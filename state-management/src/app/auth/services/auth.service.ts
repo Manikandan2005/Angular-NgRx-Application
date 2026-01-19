@@ -3,10 +3,11 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
-import { API_KEY } from "src/app/constants";
 import { AuthResponse } from "src/app/models/auth-response";
 import { User } from "src/app/models/user.model";
 import { AppState } from "src/app/store/router/app.state";
+import { logout } from "../states/auth.actions";
+import { environments } from "src/app/environments/environment";
 
 
 @Injectable({
@@ -22,7 +23,7 @@ export class AuthService{
     timer: any;
 
     login(email: string, password: string): Observable<AuthResponse>{
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environments.firebaseConfig.apiKey}`;
         const body = {
             email,
             password,
@@ -32,7 +33,7 @@ export class AuthService{
     }
 
     signUp(email : string, password : string): Observable<AuthResponse>{
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environments.firebaseConfig.apiKey}`
         const body = {
             email,
             password,
@@ -85,6 +86,7 @@ export class AuthService{
     saveUserInLocalStorage(user : User){
         try{
             localStorage.setItem('currentUser', JSON.stringify(user));
+            this.autoLogoutUser(user);
         }
         catch(error){
             console.log(error);
@@ -113,12 +115,23 @@ export class AuthService{
 
     logoutUser(){
         const loggedUser = localStorage.getItem('currentUser');
+        if(this.timer){
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
         if(!loggedUser){
             return null;
         }
         localStorage.removeItem('currentUser');
         this.router.navigate(['/auth/login'])
         return null;
+    }
+
+    autoLogoutUser(user : User){
+        const interval = user.expiresAt - Date.now();
+        this.timer = setTimeout(()=>{
+            this.store.dispatch(logout())
+        }, interval)
     }
 
 }

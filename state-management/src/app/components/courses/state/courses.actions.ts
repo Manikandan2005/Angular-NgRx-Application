@@ -7,6 +7,8 @@ export const createCourse = createAction(
     '[courses] create course', 
     props<{ course: Course}>()
 );
+
+export const setEditMode = createAction('[courses] set edit mode')
 export const createCourseSuccess = createAction(
     '[courses] create course success',
     props<{ course: Course}>()

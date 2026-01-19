@@ -70,7 +70,6 @@ export class AuthEffects {
                 if(action.redirect){
                     this.router.navigate(['/']);
                 }
-                
             })
         )
 
@@ -81,7 +80,7 @@ export class AuthEffects {
             ofType(autoLogin),
             mergeMap((action)=>{
                const user = this.authService.readUserFromLocalStorage();
-               return of(loginSuccess( {user,  redirect: true} ));
+               return of(loginSuccess( {user,  redirect: false} ));
             })
         )
     })
@@ -89,9 +88,11 @@ export class AuthEffects {
     logout$ = createEffect(()=>{
         return this.actions$.pipe(
             ofType(logout),
-            switchMap((action)=>{
+            map((action)=>{
                 return of(this.authService.logoutUser());
             })
         )
-    })
+    }, {dispatch : false})
+
+
 }

@@ -3,6 +3,7 @@ import { Course } from "src/app/models/course.model"
 export interface CoursesState {
     courses: Course[],
     showForm: boolean,
+    editMode : boolean,
 }
 
 export const initialState: CoursesState = {
@@ -45,4 +46,5 @@ export const initialState: CoursesState = {
         }
     ],
     showForm: false,
+    editMode : false,
 }
